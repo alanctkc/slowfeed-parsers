@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object"
+    },
+    "filters": {
+      "type": "object"
+    }
+  },
+  "required": ["title", "description", "source", "filters"]
+}
