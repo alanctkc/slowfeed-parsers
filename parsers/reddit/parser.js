@@ -80,7 +80,7 @@ module.exports = {
           item = items[i].data;
 
           var link = {
-            identifier: item.permalink,
+            identifier: item.id,
             title: entities.decode(item.title),
             url: item.url,
             discussionUrl: 'http://www.reddit.com' + item.permalink,
