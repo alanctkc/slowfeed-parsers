@@ -55,7 +55,7 @@ module.exports = {
             identifier: item.link,
             title: item.title,
             url: item.link,
-            postTime: item.pubDate.getTime()/1000
+            postTime: item.pubDate.getTime() / 1000
           };
 
           save(link);
