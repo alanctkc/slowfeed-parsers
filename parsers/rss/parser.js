@@ -32,10 +32,6 @@ module.exports = {
     }
   },
 
-  filter: {
-    schema: {}
-  },
-
   worker: function(source, save) {
     request(source.url)
       .on('error', function(err) {

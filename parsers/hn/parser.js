@@ -7,10 +7,6 @@ module.exports = {
   sourceDescription: 'Hacker News Top Stories',
   filterDescription: 'Hacker News stories over {{points}} points',
 
-  source: {
-    schema: {},
-  },
-
   filter: {
     schema: {
       points: {
