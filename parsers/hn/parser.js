@@ -4,7 +4,7 @@ var request = require('request');
 
 module.exports = {
   title: 'Hacker News',
-  sourceDescription: 'Hacker News Top Stories',
+  description: 'Hacker News Top Stories',
   filterDescription: 'Hacker News stories over {{points}} points',
 
   filter: {

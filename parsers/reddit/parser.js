@@ -5,7 +5,7 @@ var entities = new Entities();
 
 module.exports = {
   title: 'Reddit',
-  sourceDescription: '{{subreddit}} subreddit',
+  description: '{{subreddit}} subreddit',
   filterDescription: '/r/{{subreddit}} posts over {{points}} points {{#unless selfPosts}}(no self posts){{/unless}}',
 
   source: {

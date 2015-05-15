@@ -3,8 +3,7 @@ var FeedParser = require('feedparser');
 
 module.exports = {
   title: 'RSS',
-  sourceDescription: 'RSS feed at {{url}}',
-  filterDescription: 'RSS feed at {{url}}',
+  description: 'RSS feed at {{url}}',
 
   source: {
     schema: {
