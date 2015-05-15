@@ -18,13 +18,19 @@ module.exports = {
     },
 
     validate: function(source) {
-      // subreddit is required
-      return {};
+      var errors = {};
+
+      if (!source.subreddit) {
+        errors.subreddit = 'Subreddit is required.';
+      } else if (!source.subreddit.match(/^(\/r\/)?[a-zA-Z0-9_]{1,21}$/)) {
+        errors.subreddit = 'Invalid subreddit name.';
+      }
+
+      return errors;
     },
 
     clean: function(source) {
-      // lowercase to standardize
-      source.subreddit = source.subreddit.replace('/r/', '');
+      source.subreddit = source.subreddit.replace('/r/', '').toLowerCase();
       return source;
     }
   },
@@ -43,32 +49,49 @@ module.exports = {
     },
 
     validate: function(filter) {
-      // points > 5
-      return {};
+      var errors = {};
+
+      if (filter.points < 5) {
+        errors.points = 'Point threshold must be 5 or higher.'
+      }
+
+      return errors;
     },
 
     clean: function(filter) {
-      // selfpost default false
+      filter.selfPost = filter.selfPost || false;
       return filter;
+    },
+
+    test: function(filter, link) {
+      return (link.meta.points >= filter.points &&
+              (filter.selfPosts || !link.meta.selfPost));
     }
   },
 
-  worker: function(source, callback) {
+  worker: function(source, save) {
     request({
       url: 'http://www.reddit.com/r/' + source.subreddit + '/top.json',
       json: true
     }, function(err, res, body) {
       if (!err && res.statusCode === 200) {
         var items = body.data.children;
-        for (var i = 0; i < items.length; i ++) {         
-          item = items[i].data;         
-          if (item.score >= source.points) {
-            if (!source.selfPosts && item.is_self) {
-              continue;
+        for (var i = 0; i < items.length; i ++) {
+          item = items[i].data;
+
+          var link = {
+            identifier: item.permalink,
+            title: entities.decode(item.title),
+            url: item.url,
+            discussionUrl: 'http://www.reddit.com' + item.permalink,
+            postTime: item.created_utc,
+            meta: {
+              points: item.score,
+              selfPosts: item.is_self
             }
-            addCallback(item.permalink, source.name, entities.decode(item.title),
-                        item.url, 'http://www.reddit.com' + item.permalink, item.created_utc, 'reddit');
-          }
+          };
+
+          save(link);
         }
       }
     });

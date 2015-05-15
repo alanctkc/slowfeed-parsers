@@ -16,12 +16,18 @@ module.exports = {
     },
 
     validate: function(source) {
-      // url required
-      return {};
+      var errors = {};
+
+      if (!source.url) {
+        errors.url = 'URL is required.';
+      }
+
+      return errors;
     },
 
     clean: function(source) {
       // parser rss/atom from html too?
+      // prefix http
       return source;
     }
   },
@@ -30,7 +36,7 @@ module.exports = {
     schema: {}
   },
 
-  worker: function(source, callback) {
+  worker: function(source, save) {
     request(source.url)
       .on('error', function(err) {
         console.log(err);
@@ -43,9 +49,16 @@ module.exports = {
         var stream = this;
         var meta = this.meta;
         var item;
-        
+
         while (item = stream.read()) {
-          addCallback(item.link, source.name, item.title, item.link, null, item.pubDate.getTime()/1000, 'rss');
+          var link = {
+            identifier: item.link,
+            title: item.title,
+            url: item.link,
+            postTime: item.pubDate.getTime()/1000
+          };
+
+          save(link);
         }
       });
   }

@@ -21,12 +21,21 @@ module.exports = {
     },
 
     validate: function(filter) {
-      // points > 5
-      return {};
+      var errors = {};
+
+      if (filter.points < 5) {
+        errors.points = 'Point threshold must be 5 or higher.'
+      }
+
+      return errors;
+    },
+
+    test: function(filter, link) {
+      return (link.meta.points >= filter.points);
     }
   },
 
-  worker: function(source, callback) {
+  worker: function(source, save) {
     request({
       url: 'https://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=points%3E=5',
       json: true
@@ -38,8 +47,19 @@ module.exports = {
           if (!item.url) {
             item.url = 'https://news.ycombinator.com/item?id=' + item.objectID;
           }
-          // addCallback('HN' + item.objectID, source.name, item.title, item.url, 'https://news.ycombinator.com/item?id=' + item.objectID, item.created_at_i, 'hn');
-          console.log('https://news.ycombinator.com/item?id=' + item.objectID);
+
+          var link = {
+            identifier: item.objectID,
+            title: item.title,
+            url: item.url,
+            discussionUrl: 'https://news.ycombinator.com/item?id=' + item.objectID,
+            postTime: item.created_at_i,
+            meta: {
+              points: item.points
+            }
+          };
+
+          save(link);
         }
       }
     });
