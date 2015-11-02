@@ -31,7 +31,7 @@ module.exports = {
     }
   },
 
-  worker: function(source, save fail) {
+  worker: function(source, save, fail) {
     request({
       url: 'https://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=points%3E=5',
       json: true
