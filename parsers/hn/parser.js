@@ -31,12 +31,16 @@ module.exports = {
     }
   },
 
-  worker: function(source, save) {
+  worker: function(source, save fail) {
     request({
       url: 'https://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=points%3E=5',
       json: true
     }, function(err, res, body) {
-      if (!err && res.statusCode === 200) {
+      if (err) {
+        return fail(err);
+      }
+
+      if (res.statusCode === 200) {
         var items = body.hits;
         for (var i = 0; i < items.length; i ++) {
           var item = items[i];

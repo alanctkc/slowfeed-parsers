@@ -69,12 +69,16 @@ module.exports = {
     }
   },
 
-  worker: function(source, save) {
+  worker: function(source, save, fail) {
     request({
       url: 'http://www.reddit.com/r/' + source.subreddit + '/top.json',
       json: true
     }, function(err, res, body) {
-      if (!err && res.statusCode === 200) {
+      if (err) {
+        return fail(err);
+      }
+
+      if (res.statusCode === 200) {
         var items = body.data.children;
         for (var i = 0; i < items.length; i ++) {
           item = items[i].data;

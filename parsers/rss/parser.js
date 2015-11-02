@@ -31,7 +31,7 @@ module.exports = {
     }
   },
 
-  worker: function(source, save) {
+  worker: function(source, save, fail) {
     request(source.url)
       .on('error', function(err) {
         console.log(err);
