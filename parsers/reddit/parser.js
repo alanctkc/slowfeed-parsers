@@ -80,9 +80,9 @@ module.exports = {
 
       if (res.statusCode === 200) {
         var items = body.data.children;
-        for (var i = 0; i < items.length; i ++) {
-          item = items[i].data;
+        var links = [];
 
+        items.forEach(item => {
           var link = {
             identifier: item.id,
             title: entities.decode(item.title),
@@ -95,8 +95,10 @@ module.exports = {
             }
           };
 
-          done(null, link);
-        }
+          links.push(link);
+        });
+
+        done(null, links);
       }
     });
   }

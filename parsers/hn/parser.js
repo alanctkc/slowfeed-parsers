@@ -42,8 +42,9 @@ module.exports = {
 
       if (res.statusCode === 200) {
         var items = body.hits;
-        for (var i = 0; i < items.length; i ++) {
-          var item = items[i];
+        var links = [];
+
+        items.forEach(item => {
           if (!item.url) {
             item.url = 'https://news.ycombinator.com/item?id=' + item.objectID;
           }
@@ -59,8 +60,10 @@ module.exports = {
             }
           };
 
-          done(null, link);
-        }
+          links.push(link);
+        });
+
+        done(null, links);
       }
     });
   }

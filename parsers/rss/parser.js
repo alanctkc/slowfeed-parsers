@@ -43,7 +43,9 @@ module.exports = {
       .on('readable', () => {
         var stream = this;
         var meta = this.meta;
+
         var item;
+        var links = [];
 
         while (item = stream.read()) {
           var link = {
@@ -53,8 +55,10 @@ module.exports = {
             postTime: item.pubDate.getTime() / 1000
           };
 
-          done(null, link);
+          links.push(link);
         }
+
+        done(null, links);
       });
   }
 };
