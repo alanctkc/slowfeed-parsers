@@ -16,7 +16,7 @@ module.exports = {
       }
     },
 
-    validate: function(filter) {
+    validate: filter => {
       var errors = {};
 
       if (filter.points < 5) {
@@ -26,18 +26,18 @@ module.exports = {
       return errors;
     },
 
-    test: function(filter, link) {
+    test: (filter, link) => {
       return (link.meta.points >= filter.points);
     }
   },
 
-  worker: function(source, save, fail) {
+  collect: (source, done) => {
     request({
       url: 'https://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=points%3E=5',
       json: true
-    }, function(err, res, body) {
+    }, (err, res, body) => {
       if (err) {
-        return fail(err);
+        return done(err);
       }
 
       if (res.statusCode === 200) {
@@ -59,7 +59,7 @@ module.exports = {
             }
           };
 
-          save(link);
+          done(null, link);
         }
       }
     });

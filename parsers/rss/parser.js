@@ -14,7 +14,7 @@ module.exports = {
       }
     },
 
-    validate: function(source) {
+    validate: source => {
       var errors = {};
 
       if (!source.url) {
@@ -24,23 +24,23 @@ module.exports = {
       return errors;
     },
 
-    clean: function(source) {
-      // parser rss/atom from html too?
-      // prefix http
+    clean: source => {
+      // TODO: parser rss/atom from html too?
+      // TODO: prefix http
       return source;
     }
   },
 
-  worker: function(source, save, fail) {
+  collect: (source, done) => {
     request(source.url)
-      .on('error', function(err) {
-        console.log(err);
+      .on('error', err => {
+        done(err);
       })
       .pipe(new FeedParser())
-      .on('error', function(err) {
-        console.log(err);
+      .on('error', err => {
+        done(err);
       })
-      .on('readable', function() {
+      .on('readable', () => {
         var stream = this;
         var meta = this.meta;
         var item;
@@ -53,7 +53,7 @@ module.exports = {
             postTime: item.pubDate.getTime() / 1000
           };
 
-          save(link);
+          done(null, link);
         }
       });
   }

@@ -17,7 +17,7 @@ module.exports = {
       }
     },
 
-    validate: function(source) {
+    validate: source => {
       var errors = {};
 
       if (!source.subreddit) {
@@ -29,7 +29,7 @@ module.exports = {
       return errors;
     },
 
-    clean: function(source) {
+    clean: source => {
       source.subreddit = source.subreddit.replace('/r/', '').toLowerCase();
       return source;
     }
@@ -48,7 +48,7 @@ module.exports = {
       }
     },
 
-    validate: function(filter) {
+    validate: filter => {
       var errors = {};
 
       if (filter.points < 5) {
@@ -58,24 +58,24 @@ module.exports = {
       return errors;
     },
 
-    clean: function(filter) {
+    clean: filter => {
       filter.selfPost = filter.selfPost || false;
       return filter;
     },
 
-    test: function(filter, link) {
+    test: (filter, link) => {
       return (link.meta.points >= filter.points &&
               (filter.selfPosts || !link.meta.selfPost));
     }
   },
 
-  worker: function(source, save, fail) {
+  collect: (source, done) => {
     request({
       url: 'http://www.reddit.com/r/' + source.subreddit + '/top.json',
       json: true
-    }, function(err, res, body) {
+    }, (err, res, body) => {
       if (err) {
-        return fail(err);
+        return done(err);
       }
 
       if (res.statusCode === 200) {
@@ -95,7 +95,7 @@ module.exports = {
             }
           };
 
-          save(link);
+          done(null, link);
         }
       }
     });
