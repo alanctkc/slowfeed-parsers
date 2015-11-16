@@ -84,14 +84,14 @@ module.exports = {
 
         items.forEach(item => {
           var link = {
-            identifier: item.id,
-            title: entities.decode(item.title),
-            url: item.url,
-            discussionUrl: 'http://www.reddit.com' + item.permalink,
-            postTime: item.created_utc,
+            identifier: item.data.id,
+            title: entities.decode(item.data.title),
+            url: item.data.url,
+            discussionUrl: 'http://www.reddit.com' + item.data.permalink,
+            postTime: item.data.created_utc,
             meta: {
-              points: item.score,
-              selfPosts: item.is_self
+              points: item.data.score,
+              selfPosts: item.data.is_self
             }
           };
 
