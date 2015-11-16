@@ -91,7 +91,7 @@ module.exports = {
             postTime: item.data.created_utc,
             meta: {
               points: item.data.score,
-              selfPosts: item.data.is_self
+              selfPost: item.data.is_self
             }
           };
 
